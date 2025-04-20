@@ -25,6 +25,16 @@ namespace ysoserial.Generators
             return "friday the 13th";
         }
 
+        public override string SupportedBridgedFormatter()
+        {
+            return Formatters.BinaryFormatter;
+        }
+
+        public override List<string> Labels()
+        {
+            return new List<string> { GadgetTypes.BridgeAndDerived };
+        }
+
         public override object Generate(string formatter, InputArgs inputArgs)
         {
 
