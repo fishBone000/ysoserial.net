@@ -194,6 +194,7 @@
     <Compile Include="Generators\BaseActivationFactoryGenerator.cs" />
     <Compile Include="Generators\GetterCompilerResultsGenerator.cs" />
     <Compile Include="Generators\VeeamCDbCryptoKeyInfoGenerator.cs" />
+    <Compile Include="Generators\VeeamXMLFrameworkDsGenerator.cs" />
     <Compile Include="Generators\XamlImageInfo.cs" />
     <Compile Include="Generators\GenericPrincipalGenerator.cs" />
     <Compile Include="Generators\DataSetOldBehaviourFromFileGenerator.cs" />

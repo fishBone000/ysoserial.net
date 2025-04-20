@@ -63,7 +63,7 @@ namespace ysoserial.Generators
     {
         byte[] _fakeTable;
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             // info.SetType(typeof(System.Data.DataSet));
             info.AssemblyName = "mscorlib";
